@@ -1,0 +1,26 @@
+#!ipxe
+ 
+iseq ${net0/ip} 172.16.1.10 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi0/main.ign ||
+iseq ${net0/ip} 172.16.1.11 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi1/main.ign ||
+iseq ${net0/ip} 172.16.1.12 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi2/main.ign ||
+iseq ${net0/ip} 172.16.1.13 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi3/main.ign ||
+iseq ${net0/ip} 172.16.1.14 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi4/main.ign ||
+iseq ${net0/ip} 172.16.1.15 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi5/main.ign ||
+iseq ${net0/ip} 172.16.1.16 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi6/main.ign ||
+iseq ${net0/ip} 172.16.1.17 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi7/main.ign ||
+iseq ${net0/ip} 172.16.1.18 && set CONFIGURL http://172.16.100.11/coreos/hosts/rpi8/main.ign ||
+
+set KERNELFILE kernel-aarch64.gz
+set INITRDFILE initramfs.aarch64.img
+set ROOTFSFILE rootfs.aarch64.img
+
+set BASEURL http://172.16.100.11/fedora-coreos
+set ROOTFSURL ${BASEURL}/${ROOTFSFILE}
+
+set KERNELOPT console=tty1 rw
+set COREOSOPT coreos.live.rootfs_url=${ROOTFSURL}
+set IGNITNOPT ignition.firstboot ignition.platform.id=metal ignition.config.url=${CONFIGURL}
+
+kernel ${BASEURL}/${KERNELFILE} initrd=main ${COREOSOPT} ${IGNITNOPT} ${KERNELOPT}
+initrd --name main ${BASEURL}/${INITRDFILE}
+boot
